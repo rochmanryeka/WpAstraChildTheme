@@ -61,13 +61,9 @@ echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
 			?>
 				<category><?php echo $categories; ?></category>
 			<?php endif; ?>
-			<!-- Featured Image -->
-			<?php
-			$images = get_attached_media('image', $post->ID);
-			if ($images) :
-				$image = array_shift($images);
-			?>
-				<featuredImage><?php echo esc_url(wp_get_attachment_image_url($image->ID, 'large')); ?></featuredImage>
+			<!-- Get post thumbnail large -->
+			<?php if (has_post_thumbnail()) : ?>
+				<featuredImage><?php echo esc_url(wp_get_attachment_image_url(get_post_thumbnail_id($post->ID), 'large')); ?></featuredImage>
 			<?php endif; ?>
 			<!-- Add content if request ?content=1 -->
 			<?php if (isset($_GET['content']) && $_GET['content'] == 1) : ?>
