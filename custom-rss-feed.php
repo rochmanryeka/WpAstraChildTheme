@@ -37,21 +37,9 @@ echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
 			<description><![CDATA[<?php the_excerpt_rss(); ?>]]></description>
 			<pubDate><?php echo get_the_date('D, d M Y H:i:s +0000'); ?></pubDate>
 			<?php do_action('rss2_item'); ?>
-			<!-- Topics -->
-			<?php
-			$terms = get_the_terms($post->ID, 'topics');
-			if ($terms && !is_wp_error($terms)) :
-				$topics = array();
-				foreach ($terms as $term) {
-					$topics[] = $term->name;
-				}
-				$topics = implode(', ', $topics);
-			?>
-				<topics><?php echo $topics; ?></topics>
-			<?php endif; ?>
 			<!-- Category -->
 			<?php
-			$terms = get_the_terms($post->ID, 'category');
+			$terms = get_the_terms($post->ID, 'topic');
 			if ($terms && !is_wp_error($terms)) :
 				$categories = array();
 				foreach ($terms as $term) {
@@ -61,7 +49,7 @@ echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
 			?>
 				<category><?php echo $categories; ?></category>
 			<?php endif; ?>
-			<!-- Get post thumbnail large -->
+			<!-- Post thumbnail large -->
 			<?php if (has_post_thumbnail()) : ?>
 				<featuredImage><?php echo esc_url(wp_get_attachment_image_url(get_post_thumbnail_id($post->ID), 'large')); ?></featuredImage>
 			<?php endif; ?>
@@ -69,8 +57,15 @@ echo '<?xml version="1.0" encoding="' . get_option('blog_charset') . '"?' . '>';
 			<?php if (isset($_GET['content']) && $_GET['content'] == 1) : ?>
 				<content:encoded><![CDATA[<?php the_content(); ?>]]></content:encoded>
 			<?php endif; ?>
-			<!-- Add Author Name -->
+			<!-- Author Name -->
 			<author><?php the_author(); ?></author>
+			<?php
+				$read_time = get_field('read_time');
+				if ($read_time) :
+			?>
+			<!-- Read Time -->
+				<readTime><?php echo $read_time; ?></readTime>
+			<?php endif; ?>
 		</item>
 	<?php endwhile; ?>
 </channel>
